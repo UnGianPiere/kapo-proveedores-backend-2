@@ -7,9 +7,27 @@ import { FileUploadService, FileUploadConfig } from '../../../aplicacion/servici
 import { ErrorHandler } from './ErrorHandler';
 import { getBucket } from '../../config/googleCloudStorage';
 
+// Crear una función async que cargue GraphQLUpload dinámicamente
+let GraphQLUpload: any;
+const getGraphQLUpload = async () => {
+  if (!GraphQLUpload) {
+    // @ts-expect-error - dynamic import de ES Module
+    const module = await import('graphql-upload/GraphQLUpload.js');
+    GraphQLUpload = module.default;
+  }
+  return GraphQLUpload;
+};
+
+// Inicializar el Upload en tiempo de carga
+getGraphQLUpload();
+
 export class UploadResolver {
   getResolvers(): IResolvers {
     return {
+      // Usar el GraphQLUpload que se cargó dinámicamente
+      get Upload() {
+        return GraphQLUpload;
+      },
       Mutation: {
         /**
          * Sube un archivo individual usando el FileUploadService

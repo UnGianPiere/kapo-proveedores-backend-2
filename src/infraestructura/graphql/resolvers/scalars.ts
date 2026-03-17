@@ -81,9 +81,5 @@ getGraphQLUpload();
 export const scalarResolvers = {
   DateTime: DateTimeResolver,
   JSON: JSONResolver,
-  // Usar el GraphQLUpload que se cargó dinámicamente
-  get Upload() {
-    return GraphQLUpload;
-  },
 };
 
